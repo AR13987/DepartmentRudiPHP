@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Кафедрист - Главная страница</title>
     <link rel="stylesheet" href="/styles/style.css">
-
 </head>
 <body class="dashboard-page">
 <header class="top-header">
@@ -22,20 +21,23 @@
 </header>
 
 <div class="dashboard-container">
-    <aside class="sidebar">
-        <ul>
-            <li><a href="<?= app()->route->getUrl('/control/add-employee') ?>">Добавить сотрудника</a></li>
-            <li><a href="<?= app()->route->getUrl('/control/add-department') ?>">Добавить кафедру</a></li>
-            <li><a href="<?= app()->route->getUrl('/control/add-discipline') ?>">Добавить дисциплину</a></li>
-            <li><a href="<?= app()->route->getUrl('/control/attach-employee') ?>">Прикрепить сотрудника</a></li>
-            <li>Поиск дисциплин</li>
-            <li>Список сотрудников</li>
-        </ul>
-    </aside>
+    <?php
+    if (app()->auth::check() && in_array(app()->auth->user()->Role, ['admin', 'dean'])):
+        ?>
+        <aside class="sidebar">
+            <ul>
+                <li><a href="<?= app()->route->getUrl('/control/add-employee') ?>">Добавить сотрудника</a></li>
+                <li><a href="<?= app()->route->getUrl('/control/add-department') ?>">Добавить кафедру</a></li>
+                <li><a href="<?= app()->route->getUrl('/control/add-discipline') ?>">Добавить дисциплину</a></li>
+                <li><a href="<?= app()->route->getUrl('/control/attach-employee') ?>">Прикрепить сотрудника</a></li>
+                <li>Поиск дисциплин</li>
+                <li>Список сотрудников</li>
+            </ul>
+        </aside>
+    <?php endif; ?>
 
     <main class="main-content">
         <h1>Добро пожаловать, <?= htmlspecialchars(app()->auth->user()->Username ?? 'Гость') ?>!</h1>
-        <p>Выберите действие из бокового меню.</p>
     </main>
 </div>
 </body>
