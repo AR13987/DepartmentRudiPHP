@@ -82,6 +82,7 @@ class Site
                 'LastName'    => $request->post('lastname'),
                 'FirstName'   => $request->post('firstname'),
                 'MiddleName'  => $request->post('middlename'),
+                'Gender'      => $request->post('Gender'),
                 'BirthDate'   => $request->post('dob'),
                 'Address'     => $request->post('address'),
                 'JobTitle'    => $request->post('position'),

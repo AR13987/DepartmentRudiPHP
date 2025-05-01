@@ -31,6 +31,13 @@
             <input type="text" id="address" name="address" placeholder="Введите адрес">
         </div>
         <div class="form-group">
+            <label for="gender">Пол</label>
+            <select id="gender" name="Gender">
+                <option value="Male">Мужской</option>
+                <option value="Female">Женский</option>
+            </select>
+        </div>
+        <div class="form-group">
             <label for="position">Должность</label>
             <input type="text" id="position" name="position" placeholder="Введите должность">
         </div>
