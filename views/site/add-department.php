@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <title>Добавить кафедру</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/styles/style.css">
 </head>
-
 <body>
 <div class="form-container small">
     <h1>Добавить кафедру</h1>
-    <form>
+    <form method="post" action="/pop-it-mvc/control/add-department">
         <div class="form-group">
-            <input type="text" placeholder="Название кафедры" required>
+            <input type="text" name="departmentName" placeholder="Название кафедры" required>
         </div>
         <div class="form-actions">
             <button type="submit">Сохранить</button>
-            <button type="button" class="cancel">Отмена</button>
+            <button type="button" class="cancel" onclick="window.history.back();">Отмена</button>
         </div>
     </form>
 </div>
 </body>
-
 </html>

@@ -26,32 +26,44 @@ class User extends Model implements IdentityInterface
         'EmployeeID'
     ];
 
-    protected static function booted()
-    {
-        // Автоматическое хэширование пароля при создании пользователя
-        static::creating(function ($user) {
-            $user->PasswordHash = md5($user->PasswordHash);
-        });
-    }
-
     // Поиск пользователя по первичному ключу (UserID)
     public function findIdentity(int $id)
     {
-        return self::where('UserID', $id)->first(); // Используем поле UserID вместо id
+        return self::where('UserID', $id)->first();
     }
 
     // Возврат первичного ключа
     public function getId(): int
     {
-        return $this->UserID; // Возвращаем значение поля UserID
+        return $this->UserID;
     }
 
-    // Аутентификация пользователя по логину и паролю
+    // Аутентификация пользователя по логину и паролю.
     public function attemptIdentity(array $credentials)
     {
-        return self::where([
-            'Username' => $credentials['Username'],
-            'PasswordHash' => md5($credentials['PasswordHash'])
-        ])->first(); // Поиск пользователя
+        // Проверяем наличие ключей: в форме логин передаётся как "Username",
+        // а пароль — как "password" (это важно: форма должна отправлять поле "password")
+        if (!isset($credentials['Username']) || !isset($credentials['PasswordHash'])) {
+            return null;
+        }
+
+        // Находим пользователя по логину
+        $user = self::where('Username', $credentials['Username'])->first();
+        if ($user) {
+            if (
+                substr($user->PasswordHash, 0, 4) === '$2y$' ||
+                substr($user->PasswordHash, 0, 4) === '$2a$' ||
+                substr($user->PasswordHash, 0, 4) === '$2b$'
+            ) {
+                if (password_verify($credentials['PasswordHash'], $user->PasswordHash)) {
+                    return $user;
+                }
+            } else {
+                if ($user->PasswordHash === md5($credentials['PasswordHash'])) {
+                    return $user;
+                }
+            }
+        }
+        return null;
     }
 }

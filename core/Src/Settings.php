@@ -23,7 +23,10 @@ class Settings
 
     public function getRootPath(): string
     {
-        return $this->path['root'] ? '/' . $this->path['root'] : '';
+        // Используем значение из ключа 'path' (от config/path.php)
+        return isset($this->path['root']) && $this->path['root']
+            ? '/' . $this->path['root']
+            : '';
     }
 
     public function getDbSetting(): array
@@ -33,6 +36,6 @@ class Settings
 
     public function getViewsPath(): string
     {
-        return '/' . $this->path['views'] ?? '';
+        return '/' . ($this->path['views'] ?? '');
     }
 }

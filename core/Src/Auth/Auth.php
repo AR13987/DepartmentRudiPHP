@@ -4,12 +4,19 @@ namespace Src\Auth;
 
 use Src\Session;
 
+interface IdentityInterface
+{
+    public function getId(): int;
+    public function findIdentity(int $id);
+    public function attemptIdentity(array $credentials);
+}
+
 class Auth
 {
-    //Свойство для хранения любого класса, реализующего интерфейс IdentityInterface
-    private static IdentityInterface $user;
+    // Разрешаем значение null до инициализации
+    private static ?IdentityInterface $user = null;
 
-    //Инициализация класса пользователя
+    // Инициализация пользователя: вызовите этот метод ДО любых обращений к Auth::user()
     public static function init(IdentityInterface $user): void
     {
         self::$user = $user;
@@ -18,14 +25,12 @@ class Auth
         }
     }
 
-    //Вход пользователя по модели
     public static function login(IdentityInterface $user): void
     {
         self::$user = $user;
         Session::set('id', self::$user->getId());
     }
 
-    //Аутентификация пользователя и вход по учетным данным
     public static function attempt(array $credentials): bool
     {
         if ($user = self::$user->attemptIdentity($credentials)) {
@@ -35,27 +40,24 @@ class Auth
         return false;
     }
 
-    //Возврат текущего аутентифицированного пользователя
     public static function user()
     {
+        if (is_null(self::$user)) {
+            return null;
+        }
         $id = Session::get('id') ?? 0;
         return self::$user->findIdentity($id);
     }
 
-    //Проверка является ли текущий пользователь аутентифицированным
     public static function check(): bool
     {
-        if (self::user()) {
-            return true;
-        }
-        return false;
+        return !is_null(self::user());
     }
 
-    //Выход текущего пользователя
     public static function logout(): bool
     {
         Session::clear('id');
+        self::$user = null;
         return true;
     }
-
 }
