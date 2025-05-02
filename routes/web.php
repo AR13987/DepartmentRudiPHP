@@ -19,4 +19,6 @@ Route::group(['prefix' => '/control', 'middleware' => new AuthMiddleware(['admin
     Route::add(['GET', 'POST'], '/add-employee', [Controller\Site::class, 'addEmployee']);
     Route::add(['GET', 'POST'], '/add-department', [Controller\Site::class, 'addDepartment']);
     Route::add(['GET', 'POST'], '/attach-employee', [Controller\Site::class, 'attachEmployee']);
+    Route::add('GET', '/employees-list', [Controller\Site::class, 'employeesList']);
+    Route::add('GET', '/search-disciplines', [Controller\Site::class, 'searchDisciplines']);
 });

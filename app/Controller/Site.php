@@ -209,4 +209,75 @@ class Site
             'disciplines' => $disciplines
         ]))->render();
     }
+
+    public function employeesList(Request $request = null): string
+    {
+        if ($request === null) {
+            $request = new Request();
+        }
+
+        // Получаем выбранное значение кафедры из GET-параметров (например, ?department=3)
+        $departmentId = $request->get('department');
+
+        if ($departmentId) {
+            $employees = \Model\Employee::where('DepartmentID', $departmentId)->get();
+        } else {
+            $employees = \Model\Employee::all();
+        }
+
+        // Получаем список всех кафедр для фильтра
+        $departments = \Model\Department::all();
+
+        return (new \Src\View('site.employees-list', [
+            'employees'         => $employees,
+            'departments'       => $departments,
+            'selectedDepartment'=> $departmentId
+        ]))->render();
+    }
+
+    public function searchDisciplines(Request $request = null): string
+    {
+        if ($request === null) {
+            $request = new Request();
+        }
+
+        // Получаем параметры фильтрации
+        $selectedDepartment = $request->get('department'); // Фильтрация по кафедре
+        $selectedEmployee   = $request->get('employee');   // Фильтрация по конкретному сотруднику
+
+        $disciplines = collect();
+
+        if ($selectedEmployee) {
+            // Если выбран конкретный сотрудник, получаем дисциплины через связь
+            $employee = \Model\Employee::find($selectedEmployee);
+            if ($employee) {
+                $disciplines = $employee->disciplines;
+            }
+        } elseif ($selectedDepartment) {
+            // Если выбрана кафедра, фильтруем сотрудников по кафедре и объединяем их дисциплины
+            $employees = \Model\Employee::where('DepartmentID', $selectedDepartment)->get();
+            $allDisciplines = collect();
+            foreach ($employees as $employee) {
+                $allDisciplines = $allDisciplines->merge($employee->disciplines);
+            }
+            // Убираем дублирование по полю DisciplineID
+            $disciplines = $allDisciplines->unique('DisciplineID');
+        } else {
+            // Если фильтр не применён, выводим дисциплины, прикрепленные хотя бы к одному сотруднику
+            $disciplines = \Model\Discipline::has('employees')->get();
+        }
+
+        // Для фильтрационной формы получаем все кафедры и сотрудников
+        $departments = \Model\Department::all();
+        $employees   = \Model\Employee::all();
+
+        return (new \Src\View('site.search-disciplines', [
+            'disciplines'       => $disciplines,
+            'departments'       => $departments,
+            'employees'         => $employees,
+            'selectedDepartment'=> $selectedDepartment,
+            'selectedEmployee'  => $selectedEmployee
+        ]))->render();
+    }
+
 }

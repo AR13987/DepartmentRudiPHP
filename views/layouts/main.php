@@ -30,8 +30,8 @@
                 <li><a href="<?= app()->route->getUrl('/control/add-department') ?>">Добавить кафедру</a></li>
                 <li><a href="<?= app()->route->getUrl('/control/add-discipline') ?>">Добавить дисциплину</a></li>
                 <li><a href="<?= app()->route->getUrl('/control/attach-employee') ?>">Прикрепить сотрудника</a></li>
-                <li>Поиск дисциплин</li>
-                <li>Список сотрудников</li>
+                <li><a href="<?= app()->route->getUrl('/control/search-disciplines') ?>">Поиск дисциплин</a></li>
+                <li><a href="<?= app()->route->getUrl('/control/employees-list') ?>">Список сотрудников</a></li>
             </ul>
         </aside>
     <?php endif; ?>

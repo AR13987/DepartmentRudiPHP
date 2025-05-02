@@ -1,0 +1,97 @@
+/* Общий фон и базовые настройки для страницы поиска дисциплин */
+body.search-disciplines-page {
+    background-color: #f9f9f9;
+    color: #333;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+}
+
+/* Центрирование и оформление контейнера */
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок страницы */
+.container h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #212121;
+}
+
+/* Стили для формы фильтрации */
+.container form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.container form label {
+    font-size: 1rem;
+    font-weight: bold;
+    color: #444;
+}
+
+.container form select {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+}
+
+/* Кнопка формы */
+.container form button {
+    align-self: flex-start;
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.container form button:hover {
+    background-color: #357ABD;
+}
+
+/* Стили для раздела результатов поиска */
+.results {
+    margin-top: 30px;
+}
+
+.results h2 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: #212121;
+}
+
+.results p {
+    font-size: 1rem;
+    color: #777;
+}
+
+.results ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.results ul li {
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    background-color: #eef;
+    color: #333;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.results ul li:hover {
+    background-color: #dde;
+}

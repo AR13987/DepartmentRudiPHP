@@ -1,0 +1,97 @@
+/* Общие стили для страницы списка сотрудников */
+body.employees-list-page {
+    background-color: #f9f9f9;
+    font-family: 'Roboto', sans-serif;
+    padding: 20px;
+}
+
+/* Основной контейнер страницы */
+.container-employees {
+    max-width: 1000px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Заголовок страницы */
+.container-employees h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Стили для фильтрационной формы */
+.filter-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.filter-form label {
+    font-weight: bold;
+    color: #444;
+    font-size: 1rem;
+}
+
+.filter-form select {
+    padding: 8px 12px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.filter-form button {
+    padding: 8px 16px;
+    background-color: #4A90E2;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.filter-form button:hover {
+    background-color: #357ABD;
+}
+
+/* Стили для таблицы сотрудников */
+.employees-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.employees-table th,
+.employees-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 0.95rem;
+}
+
+.employees-table th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    color: #333;
+}
+
+.employees-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+}
+
+.employees-table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Специфичные стили для списка дисциплин внутри таблицы */
+.disciplines-list {
+    font-size: 0.9rem;
+    line-height: 1.4;
+    color: #555;
+}
