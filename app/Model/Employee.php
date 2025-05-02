@@ -22,5 +22,14 @@ class Employee extends Model
         'DepartmentID'
     ];
 
+    public function disciplines()
+    {
+        return $this->belongsToMany(
+            \Model\Discipline::class,
+            'employees_disciplines',
+            'EmployeeID',
+            'DisciplineID'
+        );
+    }
     public $timestamps = false;
 }

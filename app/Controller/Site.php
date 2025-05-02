@@ -170,8 +170,43 @@ class Site
         return (new \Src\View('site.add-department', ['message' => $message]))->render();
     }
 
-    public function attachEmployee(): string
+    public function attachEmployee(Request $request = null): string
     {
-        return (new View('site.attach-employee', ['message' => 'add-employee working']))->render();
+        if ($request === null) {
+            $request = new Request();
+        }
+
+        $message = '';
+
+        if ($request->method === 'POST') {
+            $employeeId = $request->post('employee');
+            $disciplineId = $request->post('discipline');
+
+            if (!$employeeId || !$disciplineId) {
+                $message = 'Не выбран сотрудник или дисциплина.';
+            } else {
+                $employee = \Model\Employee::find($employeeId);
+                if (!$employee) {
+                    $message = 'Сотрудник не найден.';
+                } else {
+                    try {
+                        $employee->disciplines()->attach($disciplineId);
+                        $message = 'Сотрудник успешно прикреплён к дисциплине!';
+                    } catch (\Exception $e) {
+                        $message = 'Ошибка при прикреплении сотрудника: ' . $e->getMessage();
+                    }
+                }
+            }
+        }
+
+        // Для отображения в форме получаем список сотрудников и дисциплин
+        $employees = \Model\Employee::all();
+        $disciplines = \Model\Discipline::all();
+
+        return (new \Src\View('site.attach-employee', [
+            'message'     => $message,
+            'employees'   => $employees,
+            'disciplines' => $disciplines
+        ]))->render();
     }
 }
