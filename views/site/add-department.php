@@ -9,7 +9,7 @@
 <body>
 <div class="form-container small">
     <h1>Добавить кафедру</h1>
-    <form method="post" action="/pop-it-mvc/control/add-department">
+    <form method="post" action="<?= app()->route->getUrl('/control/add-department') ?>">
         <div class="form-group">
             <input type="text" name="departmentName" placeholder="Название кафедры" required>
         </div>

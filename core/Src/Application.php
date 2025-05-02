@@ -11,7 +11,7 @@ use Src\Auth\Auth;
 class Application
 {
     private Settings $settings;
-    public Route $route; // Изменено на public для доступа из bootstrap.php
+    public Route $route;
     private Capsule $dbManager;
     private Auth $auth;
 

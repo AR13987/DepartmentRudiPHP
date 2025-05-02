@@ -53,7 +53,6 @@ class Site
         }
         if ($request->method === 'POST') {
             $data = $request->all();
-            // Хэшируем пароль перед сохранением
             if (isset($data['PasswordHash']) && !empty($data['PasswordHash'])) {
                 $data['PasswordHash'] = password_hash($data['PasswordHash'], PASSWORD_BCRYPT);
             }
@@ -64,9 +63,32 @@ class Site
         return (new View('site.signup'))->render();
     }
 
-    public function addDiscipline(): string
+    public function addDiscipline(Request $request = null): string
     {
-        return (new View('site.add-discipline', ['message' => 'add-discipline working']))->render();
+        if ($request === null) {
+            $request = new Request();
+        }
+
+        $message = '';
+
+        if ($request->method === 'POST') {
+            $disciplineName = $request->post('disciplineName');
+
+            if (!$disciplineName) {
+                $message = 'Название дисциплины не может быть пустым.';
+            } else {
+                $discipline = new \Model\Discipline();
+                $discipline->Name = $disciplineName;
+
+                if ($discipline->save()) {
+                    $message = 'Дисциплина успешно добавлена!';
+                } else {
+                    $message = 'Ошибка при сохранении дисциплины.';
+                }
+            }
+        }
+
+        return (new View('site.add-discipline', ['message' => $message]))->render();
     }
 
     public function addEmployee(Request $request = null): string

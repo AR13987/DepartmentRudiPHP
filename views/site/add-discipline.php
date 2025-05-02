@@ -11,13 +11,13 @@
 <body>
 <div class="form-container small">
     <h1>Добавить дисциплину</h1>
-    <form>
+    <form method="post" action="<?= app()->route->getUrl('/control/add-discipline') ?>">
         <div class="form-group">
-            <input type="text" placeholder="Название дисциплины" required>
+            <input type="text" name="disciplineName" placeholder="Название дисциплины" required>
         </div>
         <div class="form-actions">
             <button type="submit">Сохранить</button>
-            <button type="button" class="cancel">Отмена</button>
+            <button type="button" class="cancel" onclick="window.history.back();">Отмена</button>
         </div>
     </form>
 </div>
