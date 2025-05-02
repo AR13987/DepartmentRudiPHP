@@ -13,23 +13,23 @@
     <form method="post" action="<?= app()->route->getUrl('/control/add-employee') ?>">
         <div class="form-group">
             <label for="lastname">Фамилия</label>
-            <input type="text" id="lastname" name="lastname" placeholder="Введите фамилию" required>
+            <input type="text" id="lastname" name="LastName" placeholder="Введите фамилию" required>
         </div>
         <div class="form-group">
             <label for="firstname">Имя</label>
-            <input type="text" id="firstname" name="firstname" placeholder="Введите имя" required>
+            <input type="text" id="firstname" name="FirstName" placeholder="Введите имя" required>
         </div>
         <div class="form-group">
             <label for="middlename">Отчество</label>
-            <input type="text" id="middlename" name="middlename" placeholder="Введите отчество">
+            <input type="text" id="middlename" name="MiddleName" placeholder="Введите отчество">
         </div>
         <div class="form-group">
             <label for="dob">Дата рождения</label>
-            <input type="date" id="dob" name="dob" required>
+            <input type="date" id="dob" name="BirthDate" required>
         </div>
         <div class="form-group">
             <label for="address">Адрес прописки</label>
-            <input type="text" id="address" name="address" placeholder="Введите адрес">
+            <input type="text" id="address" name="Address" placeholder="Введите адрес">
         </div>
         <div class="form-group">
             <label for="gender">Пол</label>
@@ -40,11 +40,11 @@
         </div>
         <div class="form-group">
             <label for="position">Должность</label>
-            <input type="text" id="position" name="position" placeholder="Введите должность">
+            <input type="text" id="position" name="JobTitle" placeholder="Введите должность">
         </div>
         <div class="form-group">
             <label for="role">Роль пользователя</label>
-            <select id="role" name="role">
+            <select id="role" name="Role">
                 <?php if (app()->auth->user()->Role === 'admin'): ?>
                     <option value="dean">Сотрудник деканата</option>
                     <option value="teacher">Педагогический сотрудник</option>
@@ -55,7 +55,7 @@
         </div>
         <div class="form-group">
             <label for="department">Кафедра</label>
-            <select id="department" name="department">
+            <select id="department" name="DepartmentID">
                 <?php if (!empty($departments)): ?>
                     <?php foreach ($departments as $department): ?>
                         <option value="<?= htmlspecialchars($department->DepartmentID) ?>">

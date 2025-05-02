@@ -151,14 +151,14 @@ class Site
 
         if ($request->method === 'POST') {
             $employeeData = [
-                'lastname'    => $request->post('lastname'),
-                'firstname'   => $request->post('firstname'),
-                'middlename'  => $request->post('middlename'),
+                'LastName'    => $request->post('LastName'),
+                'FirstName'   => $request->post('FirstName'),
+                'MiddleName'  => $request->post('MiddleName'),
                 'Gender'      => $request->post('Gender'),
-                'dob'         => $request->post('dob'),
-                'address'     => $request->post('address'),
-                'position'    => $request->post('position'),
-                'department'  => $request->post('department'),
+                'BirthDate'         => $request->post('BirthDate'),
+                'Address'     => $request->post('Address'),
+                'JobTitle'    => $request->post('JobTitle'),
+                'DepartmentID'   => $request->DepartmentID,
                 'Username'     => $request->post('Username'),
                 'PasswordHash' => $request->post('PasswordHash'),
             ];
@@ -174,7 +174,7 @@ class Site
                     $userData = [
                         'Username'     => $request->post('Username'),
                         'PasswordHash' => password_hash($request->post('PasswordHash'), PASSWORD_BCRYPT),
-                        'Role'         => $request->post('role'),
+                        'Role'         => $request->post('Role'),
                         'EmployeeID'   => $employee->EmployeeID
                     ];
 
