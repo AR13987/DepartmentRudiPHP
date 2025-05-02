@@ -8,6 +8,9 @@ use Src\View;
 use Src\Request;
 use Src\Auth\Auth;
 use Model\Department;
+use Src\Validation\EmployeeValidator;
+use Src\Validation\UserValidator;
+use Src\Validation\Validator;
 
 class Site
 {
@@ -17,7 +20,6 @@ class Site
         return (new View())->render('site.post', ['posts' => $posts]);
     }
 
-    // Если объект Request не передан, создаём новый
     public function login(Request $request = null): string
     {
         if ($request === null) {
@@ -25,15 +27,36 @@ class Site
         }
 
         if ($request->method === 'GET') {
-            return (new View('site.login'))->render();
+            return (new \Src\View('site.login'))->render();
         }
 
-        if (Auth::attempt($request->all())) {
+        $data = $request->all();
+        $errors = [];
+
+        if (empty($data['Username'])) {
+            $errors['Username'][] = 'Логин обязателен.';
+        }
+        if (empty($data['PasswordHash'])) {
+            $errors['PasswordHash'][] = 'Пароль обязателен.';
+        }
+
+        if (!empty($errors)) {
+            return (new \Src\View('site.login', [
+                'errors' => $errors,
+                'old'    => $data
+            ]))->render();
+        }
+
+        if (\Src\Auth\Auth::attempt($data)) {
             app()->route->redirect('/');
         }
 
-        return (new View('site.login', ['message' => 'Неправильные логин или пароль']))->render();
+        return (new \Src\View('site.login', [
+            'message' => 'Неправильные логин или пароль',
+            'old'     => $data
+        ]))->render();
     }
+
 
     public function logout(): void
     {
@@ -51,16 +74,35 @@ class Site
         if ($request === null) {
             $request = new Request();
         }
+
+        $message = '';
+        $errors = [];
+        $old = $request->all();
+
         if ($request->method === 'POST') {
-            $data = $request->all();
-            if (isset($data['PasswordHash']) && !empty($data['PasswordHash'])) {
+            $data = [
+                'Username'     => $request->post('Username'),
+                'PasswordHash' => $request->post('PasswordHash'),
+            ];
+            $validator = UserValidator::make($data);
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+            } else {
+                // Хэширование пароля перед сохранением
                 $data['PasswordHash'] = password_hash($data['PasswordHash'], PASSWORD_BCRYPT);
-            }
-            if (User::create($data)) {
-                app()->route->redirect('/login');
+                if (\Model\User::create($data)) {
+                    app()->route->redirect('/login');
+                } else {
+                    $message = 'Ошибка при регистрации.';
+                }
             }
         }
-        return (new View('site.signup'))->render();
+
+        return (new \Src\View('site.signup', [
+            'message' => $message,
+            'errors'  => $errors,
+            'old'     => $old
+        ]))->render();
     }
 
     public function addDiscipline(Request $request = null): string
@@ -70,16 +112,19 @@ class Site
         }
 
         $message = '';
+        $errors = [];
+        $old = $request->all();
 
         if ($request->method === 'POST') {
-            $disciplineName = $request->post('disciplineName');
-
-            if (!$disciplineName) {
-                $message = 'Название дисциплины не может быть пустым.';
+            $data = [
+                'Name'     => $request->post('Name'),
+            ];
+            $validator = \Src\Validation\DisciplineValidator::make($data);
+            if ($validator->fails()) {
+                $errors = $validator->errors();
             } else {
                 $discipline = new \Model\Discipline();
-                $discipline->Name = $disciplineName;
-
+                $discipline->Name = $data['Name'];
                 if ($discipline->save()) {
                     $message = 'Дисциплина успешно добавлена!';
                 } else {
@@ -88,7 +133,11 @@ class Site
             }
         }
 
-        return (new View('site.add-discipline', ['message' => $message]))->render();
+        return (new \Src\View('site.add-discipline', [
+            'message' => $message,
+            'errors'  => $errors,
+            'old'     => $old
+        ]))->render();
     }
 
     public function addEmployee(Request $request = null): string
@@ -98,67 +147,80 @@ class Site
         }
 
         $message = '';
+        $errors = [];
 
         if ($request->method === 'POST') {
             $employeeData = [
-                'LastName'    => $request->post('lastname'),
-                'FirstName'   => $request->post('firstname'),
-                'MiddleName'  => $request->post('middlename'),
+                'lastname'    => $request->post('lastname'),
+                'firstname'   => $request->post('firstname'),
+                'middlename'  => $request->post('middlename'),
                 'Gender'      => $request->post('Gender'),
-                'BirthDate'   => $request->post('dob'),
-                'Address'     => $request->post('address'),
-                'JobTitle'    => $request->post('position'),
-                'DepartmentID'=> $request->post('department'),
+                'dob'         => $request->post('dob'),
+                'address'     => $request->post('address'),
+                'position'    => $request->post('position'),
+                'department'  => $request->post('department'),
+                'Username'     => $request->post('Username'),
+                'PasswordHash' => $request->post('PasswordHash'),
             ];
 
-            $employee = new Employee();
-            $employee->fill($employeeData);
-            if ($employee->save()) {
-                $userData = [
-                    'Username'     => $request->post('Username'),
-                    'PasswordHash' => password_hash($request->post('PasswordHash'), PASSWORD_BCRYPT),
-                    'Role'         => $request->post('role'),
-                    'EmployeeID'   => $employee->EmployeeID
-                ];
-
-                $user = new User();
-                $user->fill($userData);
-                if ($user->save()) {
-                    $message = 'Сотрудник и пользователь успешно добавлены!';
-                } else {
-                    $message = 'Ошибка при добавлении пользователя.';
-                }
+            // Валидация данных сотрудника
+            $validator = EmployeeValidator::make($employeeData);
+            if ($validator->fails()) {
+                $errors = $validator->errors();
             } else {
-                $message = 'Ошибка при добавлении сотрудника.';
+                $employee = new \Model\Employee();
+                $employee->fill($employeeData);
+                if ($employee->save()) {
+                    $userData = [
+                        'Username'     => $request->post('Username'),
+                        'PasswordHash' => password_hash($request->post('PasswordHash'), PASSWORD_BCRYPT),
+                        'Role'         => $request->post('role'),
+                        'EmployeeID'   => $employee->EmployeeID
+                    ];
+
+                    $user = new \Model\User();
+                    $user->fill($userData);
+                    if ($user->save()) {
+                        $message = 'Сотрудник и пользователь успешно добавлены!';
+                    } else {
+                        $message = 'Ошибка при добавлении пользователя.';
+                    }
+                } else {
+                    $message = 'Ошибка при добавлении сотрудника.';
+                }
             }
         }
 
-        // Получаем список кафедр из базы
-        $departments = Department::all();
+        // Получаем список кафедр для формы
+        $departments = \Model\Department::all();
 
-        // Передаем кафедры в шаблон через массив данных
-        return (new View('site.add-employee', [
+        return (new \Src\View('site.add-employee', [
             'message'     => $message,
-            'departments' => $departments
+            'departments' => $departments,
+            'errors'      => $errors
         ]))->render();
     }
 
-    public function addDepartment(\Src\Request $request = null): string
+    public function addDepartment(Request $request = null): string
     {
         if ($request === null) {
-            $request = new \Src\Request();
+            $request = new Request();
         }
 
         $message = '';
-        if ($request->method === 'POST') {
-            $deptName = $request->post('Name');
+        $errors = [];
+        $old = $request->all();
 
-            if (!$deptName) {
-                $message = 'Название кафедры не может быть пустым.';
+        if ($request->method === 'POST') {
+            $data = [
+                'Name'     => $request->post('Name'),
+            ];
+            $validator = \Src\Validation\DepartmentValidator::make($data);
+            if ($validator->fails()) {
+                $errors = $validator->errors();
             } else {
                 $department = new \Model\Department();
-                $department->Name = $deptName;
-
+                $department->Name = $data['Name'];
                 if ($department->save()) {
                     $message = 'Кафедра успешно добавлена!';
                 } else {
@@ -167,7 +229,11 @@ class Site
             }
         }
 
-        return (new \Src\View('site.add-department', ['message' => $message]))->render();
+        return (new \Src\View('site.add-department', [
+            'message' => $message,
+            'errors'  => $errors,
+            'old'     => $old
+        ]))->render();
     }
 
     public function attachEmployee(Request $request = null): string

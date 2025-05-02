@@ -10,7 +10,7 @@
 <div class="login-container">
     <h1>УМУ "Кафедрист"</h1>
     <h2>Авторизация</h2><br>
-
+    <?php include __DIR__ . '/../errors/validation-errors.php'; ?><br>
     <?php if (isset($message) && $message): ?>
         <h3><?= htmlspecialchars($message) ?></h3>
     <?php endif; ?>

@@ -9,6 +9,7 @@
 <body>
 <div class="form-container small">
     <h2>Регистрация в системе</h2><br>
+    <?php include __DIR__ . '/../errors/validation-errors.php'; ?><br>
     <h3><?= $message ?? ''; ?></h3>
     <form method="post">
         <div class="form-group">

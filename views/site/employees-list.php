@@ -11,6 +11,7 @@
     <h1>Список сотрудников</h1>
 
     <form class="filter-form" method="get" action="<?= app()->route->getUrl('/control/employees-list') ?>">
+        <button type="button" class="cancel" onclick="window.history.back();">Назад</button>
         <label for="department">Фильтр по кафедре:</label>
         <select name="department" id="department">
             <option value="">Все кафедры</option>

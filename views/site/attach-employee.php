@@ -11,7 +11,7 @@
     <h1>Прикрепить сотрудника к дисциплине</h1>
     <?php if (isset($message) && $message): ?>
         <p><?= htmlspecialchars($message) ?></p>
-    <?php endif; ?>
+    <?php endif; ?><br>
     <form method="post" action="<?= app()->route->getUrl('/control/attach-employee') ?>">
         <div class="form-group">
             <label for="employee">Сотрудник</label>

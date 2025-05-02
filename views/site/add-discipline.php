@@ -11,9 +11,10 @@
 <body>
 <div class="form-container small">
     <h1>Добавить дисциплину</h1>
+    <?php include __DIR__ . '/../errors/validation-errors.php'; ?><br>
     <form method="post" action="<?= app()->route->getUrl('/control/add-discipline') ?>">
         <div class="form-group">
-            <input type="text" name="disciplineName" placeholder="Название дисциплины" required>
+            <input type="text" name="Name" placeholder="Название дисциплины" required>
         </div>
         <div class="form-actions">
             <button type="submit">Сохранить</button>

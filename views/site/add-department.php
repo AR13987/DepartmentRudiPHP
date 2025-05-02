@@ -9,9 +9,10 @@
 <body>
 <div class="form-container small">
     <h1>Добавить кафедру</h1>
+    <?php include __DIR__ . '/../errors/validation-errors.php'; ?><br>
     <form method="post" action="<?= app()->route->getUrl('/control/add-department') ?>">
         <div class="form-group">
-            <input type="text" name="departmentName" placeholder="Название кафедры" required>
+            <input type="text" name="Name" placeholder="Название кафедры" required>
         </div>
         <div class="form-actions">
             <button type="submit">Сохранить</button>

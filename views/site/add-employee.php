@@ -9,7 +9,8 @@
 <body>
 <div class="form-container">
     <h1>Добавить сотрудника</h1>
-    <form method="post" action="/pop-it-mvc/control/add-employee">
+    <?php include __DIR__ . '/../errors/validation-errors.php'; ?><br>
+    <form method="post" action="<?= app()->route->getUrl('/control/add-employee') ?>">
         <div class="form-group">
             <label for="lastname">Фамилия</label>
             <input type="text" id="lastname" name="lastname" placeholder="Введите фамилию" required>
