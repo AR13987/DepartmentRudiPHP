@@ -13,7 +13,8 @@
         "php": "^7.4 | ^8.0",
         "illuminate/database": "10.x-dev",
         "illuminate/events": "10.x-dev",
-        "nikic/fast-route": "2.0.x-dev"
+        "nikic/fast-route": "2.0.x-dev",
+        "soedi/collect-validation": "dev-main"
     },
     "autoload": {
         "psr-4": {

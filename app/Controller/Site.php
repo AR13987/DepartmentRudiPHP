@@ -2,15 +2,10 @@
 
 namespace Controller;
 
-use Model\Employee;
-use Model\User;
 use Src\View;
 use Src\Request;
 use Src\Auth\Auth;
-use Model\Department;
-use Src\Validation\EmployeeValidator;
-use Src\Validation\UserValidator;
-use Src\Validation\Validator;
+use Validation\Validator;
 
 class Site
 {
@@ -76,19 +71,26 @@ class Site
         }
 
         $message = '';
-        $errors = [];
-        $old = $request->all();
+        $errors  = [];
+        $old     = $request->all();
 
         if ($request->method === 'POST') {
             $data = [
                 'Username'     => $request->post('Username'),
                 'PasswordHash' => $request->post('PasswordHash'),
             ];
-            $validator = UserValidator::make($data);
+
+            // Задаем правила для валидации
+            $rules = [
+                'Username'     => 'required|min:3|max:255',
+                'PasswordHash' => 'required|min:6'
+            ];
+
+            $validator = new Validator($data, $rules);
             if ($validator->fails()) {
                 $errors = $validator->errors();
             } else {
-                // Хэширование пароля перед сохранением
+                // Хэшируем пароль и сохраняем пользователя
                 $data['PasswordHash'] = password_hash($data['PasswordHash'], PASSWORD_BCRYPT);
                 if (\Model\User::create($data)) {
                     app()->route->redirect('/login');
@@ -112,14 +114,19 @@ class Site
         }
 
         $message = '';
-        $errors = [];
-        $old = $request->all();
+        $errors  = [];
+        $old     = $request->all();
 
         if ($request->method === 'POST') {
             $data = [
-                'Name'     => $request->post('Name'),
+                'Name' => $request->post('Name'),
             ];
-            $validator = \Src\Validation\DisciplineValidator::make($data);
+
+            $rules = [
+                'Name' => 'required|min:2|max:255'
+            ];
+
+            $validator = new Validator($data, $rules);
             if ($validator->fails()) {
                 $errors = $validator->errors();
             } else {
@@ -147,7 +154,8 @@ class Site
         }
 
         $message = '';
-        $errors = [];
+        $errors  = [];
+        $old     = $request->all();
 
         if ($request->method === 'POST') {
             $employeeData = [
@@ -155,16 +163,25 @@ class Site
                 'FirstName'   => $request->post('FirstName'),
                 'MiddleName'  => $request->post('MiddleName'),
                 'Gender'      => $request->post('Gender'),
-                'BirthDate'         => $request->post('BirthDate'),
+                'BirthDate'   => $request->post('BirthDate'),
                 'Address'     => $request->post('Address'),
                 'JobTitle'    => $request->post('JobTitle'),
-                'DepartmentID'   => $request->DepartmentID,
-                'Username'     => $request->post('Username'),
-                'PasswordHash' => $request->post('PasswordHash'),
+                'DepartmentID'=> $request->post('DepartmentID'),
+                'Username'    => $request->post('Username'),
+                'PasswordHash'=> $request->post('PasswordHash'),
             ];
 
-            // Валидация данных сотрудника
-            $validator = EmployeeValidator::make($employeeData);
+            $rules = [
+                'LastName'     => 'required|min:2|max:255',
+                'FirstName'    => 'required|min:2|max:255',
+                'BirthDate'    => 'required',
+                'JobTitle'     => 'required|max:255',
+                'DepartmentID' => 'required|numeric',
+                'Username'     => 'required|min:3|max:255',
+                'PasswordHash' => 'required|min:6'
+            ];
+
+            $validator = new Validator($employeeData, $rules);
             if ($validator->fails()) {
                 $errors = $validator->errors();
             } else {
@@ -208,14 +225,19 @@ class Site
         }
 
         $message = '';
-        $errors = [];
-        $old = $request->all();
+        $errors  = [];
+        $old     = $request->all();
 
         if ($request->method === 'POST') {
             $data = [
-                'Name'     => $request->post('Name'),
+                'Name' => $request->post('Name'),
             ];
-            $validator = \Src\Validation\DepartmentValidator::make($data);
+
+            $rules = [
+                'Name' => 'required|min:2|max:255'
+            ];
+
+            $validator = new Validator($data, $rules);
             if ($validator->fails()) {
                 $errors = $validator->errors();
             } else {
